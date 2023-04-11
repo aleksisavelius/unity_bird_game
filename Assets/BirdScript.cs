@@ -12,6 +12,7 @@ public class BirdScript : MonoBehaviour
     // configuration values
     public float nJumpMultiplier;
     private bool bFlapActive;
+    private bool BirdAtStart;
     public bool BirdIsAlive;
 
     // Start is called before the first frame update
@@ -20,18 +21,30 @@ public class BirdScript : MonoBehaviour
         // set start values
         bFlapActive = false;
         BirdIsAlive = true;
+        BirdAtStart = true;
 
         // get logic object for collisions
         Logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<EventManager_Script>();
+
+        // disable bird physics
+        MyRigidbody2.Sleep();
 
     }
 
     // Update is called once per frame
     void Update()
-    {   
+    {
+
+        // activate physics if game is running
+        if (Logic.GameRunning)
+        {
+            MyRigidbody2.WakeUp();
+            BirdAtStart = false;
+            BirdIsAlive = true;
+        }
 
         // Bird action when pressed key
-        if (Input.GetKeyDown(KeyCode.Space) == true && BirdIsAlive == true)
+        if (Input.GetKeyDown(KeyCode.Space) == true && BirdIsAlive == true && Logic.GameRunning == true)
         {   
             // activate jump velocity
             MyRigidbody2.velocity = Vector2.up * nJumpMultiplier;
@@ -48,6 +61,12 @@ public class BirdScript : MonoBehaviour
                 bFlapActive = true;
             }
         }
+
+        // check if location needs reseting
+        if (Logic.ResetBirdLocation == true && BirdAtStart == false)
+        {
+            ResetBirdLocation();
+        }
         
     }
 
@@ -57,5 +76,15 @@ public class BirdScript : MonoBehaviour
         // activate game over screen and kill the bird
         Logic.GameOver();
         BirdIsAlive = false;
+    }
+    private void ResetBirdLocation()
+    {
+        Debug.Log("Bird location resetted");
+        // reset position
+        gameObject.transform.position = new Vector3(0,0,0);
+        // reset physics
+        MyRigidbody2.Sleep();
+        BirdAtStart = true;
+
     }
 }
