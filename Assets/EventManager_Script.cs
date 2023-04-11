@@ -10,7 +10,7 @@ public class EventManager_Script : MonoBehaviour
     // Script references
     public int playerscore;
     public bool GameRunning;
-    public bool ResetBirdLocation;
+    public bool StartScreenActive;
     public Text score_text;
     public GameObject GameOverScreen;
     public GameObject StartGameScreen;
@@ -20,15 +20,18 @@ public class EventManager_Script : MonoBehaviour
     {
         //StartGameScreenOn();
         GameRunning = false;
-        ResetBirdLocation = false;
+        StartScreenActive = true;
     }
 
     // Add score to player
     [ContextMenu("Increase Score")]
     public void AddScore(int ScoreToAdd)
     {
-        playerscore = playerscore + ScoreToAdd;
-        score_text.text = "Score: " + playerscore.ToString();
+        if (GameRunning == true)
+        {
+            playerscore = playerscore + ScoreToAdd;
+            score_text.text = "Score: " + playerscore.ToString();
+        }
     }
 
     // Start game functions
@@ -37,8 +40,8 @@ public class EventManager_Script : MonoBehaviour
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         // start game pressed
-        ResetBirdLocation = false;
         GameRunning = true;
+        StartScreenActive = false;
         StartGameScreen.SetActive(false);
     }
 
@@ -54,12 +57,15 @@ public class EventManager_Script : MonoBehaviour
     {
 
         Debug.Log("Restart button pressed");
-        // reset bird location
-        ResetBirdLocation = true;
 
         // Set start game screen active
         GameOverScreen.SetActive(false);
         StartGameScreen.SetActive(true);
+        StartScreenActive = true;
+
+        // reset score
+        playerscore = 0;
+        score_text.text = "Score: " + playerscore.ToString();
 
 
     }

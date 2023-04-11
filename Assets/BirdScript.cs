@@ -12,7 +12,6 @@ public class BirdScript : MonoBehaviour
     // configuration values
     public float nJumpMultiplier;
     private bool bFlapActive;
-    private bool BirdAtStart;
     public bool BirdIsAlive;
 
     // Start is called before the first frame update
@@ -21,7 +20,6 @@ public class BirdScript : MonoBehaviour
         // set start values
         bFlapActive = false;
         BirdIsAlive = true;
-        BirdAtStart = true;
 
         // get logic object for collisions
         Logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<EventManager_Script>();
@@ -39,8 +37,11 @@ public class BirdScript : MonoBehaviour
         if (Logic.GameRunning)
         {
             MyRigidbody2.WakeUp();
-            BirdAtStart = false;
             BirdIsAlive = true;
+        }
+        else if(Logic.GameRunning == false && Logic.StartScreenActive == true)
+        {
+            ResetBirdLocation();
         }
 
         // Bird action when pressed key
@@ -61,13 +62,6 @@ public class BirdScript : MonoBehaviour
                 bFlapActive = true;
             }
         }
-
-        // check if location needs reseting
-        if (Logic.ResetBirdLocation == true && BirdAtStart == false)
-        {
-            ResetBirdLocation();
-        }
-        
     }
 
     // Actions when collision to pipe
@@ -77,14 +71,12 @@ public class BirdScript : MonoBehaviour
         Logic.GameOver();
         BirdIsAlive = false;
     }
-    private void ResetBirdLocation()
+    public void ResetBirdLocation()
     {
-        Debug.Log("Bird location resetted");
-        // reset position
-        gameObject.transform.position = new Vector3(0,0,0);
         // reset physics
         MyRigidbody2.Sleep();
-        BirdAtStart = true;
-
+        // reset position
+        gameObject.transform.position = new Vector3(0,0,0);
+        gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
     }
 }
