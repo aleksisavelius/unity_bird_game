@@ -25,6 +25,7 @@ public class MovePipe : MonoBehaviour
         if (transform.position.x < PipeDeadZone)
         {
             Destroy(gameObject);
+            Debug.Log("Pipe Deleted!");
         }
         
     }
