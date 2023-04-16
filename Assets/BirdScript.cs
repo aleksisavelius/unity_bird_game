@@ -8,17 +8,16 @@ public class BirdScript : MonoBehaviour
     // Set References
     public Rigidbody2D MyRigidbody2;
     public EventManager_Script Logic;
+    public Animator animator;
 
     // configuration values
     public float nJumpMultiplier;
-    private bool bFlapActive;
     public bool BirdIsAlive;
 
     // Start is called before the first frame update
     void Start()
     {
-        // set start values
-        bFlapActive = false;
+        // set start values 
         BirdIsAlive = true;
 
         // get logic object for collisions
@@ -50,17 +49,13 @@ public class BirdScript : MonoBehaviour
             // activate jump velocity
             MyRigidbody2.velocity = Vector2.up * nJumpMultiplier;
 
-            // Update flapping image
-            if (bFlapActive == true)
-            {
-
-                bFlapActive = false;
-            }
-            else if (bFlapActive == false)
-            {
-                
-                bFlapActive = true;
-            }
+            // Set animation
+            animator.SetBool("BirdFlaps",true);
+        }
+        else
+        {
+            // Set animation
+            animator.SetBool("BirdFlaps", false);
         }
     }
 
