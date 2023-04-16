@@ -43,18 +43,23 @@ public class BirdScript : MonoBehaviour
             ResetBirdLocation();
         }
 
-        // Bird action when pressed key
+        // Bird action when key pressed
         if (Input.GetKeyDown(KeyCode.Space) == true && BirdIsAlive == true && Logic.GameRunning == true)
         {   
             // activate jump velocity
             MyRigidbody2.velocity = Vector2.up * nJumpMultiplier;
 
             // Set animation
-            animator.SetBool("BirdFlaps",true);
+            
+        }
+
+        // Set animation from key status
+        if (Input.GetKey(KeyCode.Space)==true)
+        {
+            animator.SetBool("BirdFlaps", true);
         }
         else
         {
-            // Set animation
             animator.SetBool("BirdFlaps", false);
         }
     }
